@@ -18,8 +18,5 @@ root.render(
     <QueryClientProvider client={queryClient}>
       <StudentComponent />
     </QueryClientProvider>
-    <QueryClientProvider client={queryClient}>
-      <CharApp />
-    </QueryClientProvider>
   </React.StrictMode>
 );
