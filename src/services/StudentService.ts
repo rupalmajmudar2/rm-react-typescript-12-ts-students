@@ -13,6 +13,7 @@ const apiClient = axios.create({
 let s1: StudentModel = { esid: 1, name: "S1" };
 let s2: StudentModel = { esid: 2, name: "S2" };
 let s3: StudentModel = { esid: 3, name: "S3" };
+let sNull: StudentModel = { esid: -1, name: "Anon" };
 
 //function getAll(): StudentModel[] {
 const getAll = () => {
@@ -25,6 +26,10 @@ const getAll = () => {
 };
 
 const findStudentById = (id: number) => {
+  if (id >= getAll().length) {
+    return sNull;
+  }
+
   return getAll()[id];
 };
 
