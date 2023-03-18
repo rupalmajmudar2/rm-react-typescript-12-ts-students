@@ -1,3 +1,4 @@
+import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useState } from "react";
 import StudentModel from "../models/StudentModel";
 import StudentService from "../services/StudentService";
@@ -9,7 +10,7 @@ import { useQuery } from "react-query";
 
 export const StudentComponent: React.FC = () => {
   const [getResult, setResult] = useState<string | null>(null);
-  const [getId, setId] = useState<number>(-1);
+  const [getId, setId] = useState<number>(1);
   //const [getStudents, setStudents] = useState<StudentModel[]>([{}]);
 
   const fetchStudentsAsync = () => async () => {
@@ -17,10 +18,13 @@ export const StudentComponent: React.FC = () => {
     console.log("#fetchStudentsAsync fetched: ", allStudents.length, " students.");
     return allStudents;
   }
+  const clearOutput = () => {
+    setResult(null);
+  };
 
   //Cool: refetch: the function to manually refetch the query on-demand. @see #getAllData which we call on btnClick!!
   //https://tanstack.com/query/latest/docs/react/reference/useQuery?from=reactQueryV3&original=https%3A%2F%2Ftanstack.com%2Fquery%2Fv3%2Fdocs%2Freference%2FuseQuery
-  const { /*isSuccess, isError, data, error,*/ refetch } =
+  const { /*isSuccess, isError, data, error,*/ refetch: getAllStudents } =
     useQuery<StudentModel[], Error>(
       "query-get-all-students",
       fetchStudentsAsync(),
@@ -36,7 +40,7 @@ export const StudentComponent: React.FC = () => {
       }
     );
 
-  const { isLoading: isLoadingTutorial, refetch: getStudentById } = useQuery<StudentModel, Error>(
+  const { refetch: getStudentById } = useQuery<StudentModel, Error>(
     "query-get-student-by-esid",
     async () => {
       return await StudentService.findStudentById(getId);
@@ -56,11 +60,11 @@ export const StudentComponent: React.FC = () => {
   //==========================================================
   const getAllData = () => {
     try {
-      console.log("Before #refetch");
-      refetch()
-      console.log("After #refetch");
+      console.log("Before #getAllStudents");
+      getAllStudents()
+      console.log("After #getAllStudents");
     } catch (err) {
-      console.log("Error in refetch : ", err);
+      console.log("Error in getAllStudents : ", err);
     }
   }
 
@@ -83,28 +87,41 @@ export const StudentComponent: React.FC = () => {
   //==========================================================
   return (
     <div className="container">
-      <>
-        <h3>Student Component</h3>
-        {<h3>ResultStr: <>{getResult}</></h3>}
-        {/*<h3>All: <>{JSON.stringify(getStudents)}</></h3>*/}
-        <button
-          className="btn btn-sm btn-primary" onClick={getAllData}>Get All Students
-        </button>
-
-        <input
-          type="text"
-          value={getId}
-          onChange={(e) => setId(+e.target.value)}
-          className="form-control ml-2"
-          placeholder="Id"
-        />
-        <div className="input-group-append">
-          <button className="btn btn-sm btn-primary" onClick={getDataById}>
-            Get by Id
-          </button>
+      <div className="card">
+        <div className="card-header">Student Management</div>
+        <div className="card-body">
+          <div className="input-group input-group-sm">
+            <button className="btn btn-sm btn-primary" onClick={getAllData}>
+              Get All Students
+            </button>
+            {/*<div>{getResult}</div>*/}
+            {/*<h3>All: <>{JSON.stringify(getStudents)}</></h3>*/}
+            <input
+              type="text"
+              value={getId}
+              onChange={(e) => setId(+e.target.value)}
+              className="form-control ml-2"
+              placeholder="Id"
+            />
+            <div className="input-group-append">
+              <button className="btn btn-sm btn-primary" onClick={getDataById}>
+                Get by Id
+              </button>
+            </div>
+            <button
+              className="btn btn-sm btn-warning ml-2"
+              onClick={clearOutput}
+            >
+              Clear
+            </button>
+          </div>
+          {getResult && (
+            <div className="alert alert-secondary mt-2" role="alert">
+              <pre>{getResult}</pre>
+            </div>
+          )}
         </div>
-
-      </>
+      </div>
     </div>
   );
 }

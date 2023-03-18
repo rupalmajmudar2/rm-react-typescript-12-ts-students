@@ -25,17 +25,31 @@ const getAll = () => {
   return students;
 };
 
-const findStudentById = (id: number) => {
-  if (id >= getAll().length) {
-    return sNull;
-  }
+const findStudentById = (esid: number) => {
+  const found: StudentModel[] = getAll().filter(
+    (student) => student.esid === esid
+  );
 
-  return getAll()[id];
+  if (found.length === 0 || found.length > 1) return sNull;
+  return found[0];
+};
+
+const createStudent = async ({ esid, name }: StudentModel) => {
+  //const response = await apiClient.post<any>("/tutorials", { title, description });
+  return { esid: esid, name: name };
+};
+
+const updateStudent = async (id: any, { name }: StudentModel) => {
+  const studentToUpdate = findStudentById(id);
+  studentToUpdate.name = name;
+  return studentToUpdate;
 };
 
 const StudentService = {
   getAll,
   findStudentById,
+  createStudent,
+  updateStudent,
 };
 
 export default StudentService;

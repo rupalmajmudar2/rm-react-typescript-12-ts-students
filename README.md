@@ -2,6 +2,7 @@
 - To create this app: 
     PS C:\Users\rupal\work\repos> npx create-react-app rm-react-ts-students --template typescript 
 
+    npm install bootstrap@5.0.0
     npm install axios
     npm install react-query
     
