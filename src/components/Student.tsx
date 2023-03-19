@@ -2,7 +2,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useState } from "react";
 import StudentModel from "../models/StudentModel";
 import StudentService from "../services/StudentService";
-import { useQuery } from "react-query";
+import { useQuery, useMutation } from "react-query";
 
 //https://codesandbox.io/s/example-using-react-query-as-render-props-in-a-class-component-7vjlu?file=/src/App.js:116-216
 //https://www.bezkoder.com/react-query-axios-typescript/
@@ -12,6 +12,8 @@ export const StudentComponent: React.FC = () => {
   const [getResult, setResult] = useState<string | null>(null);
   const [getId, setId] = useState<number>(1);
   //const [getStudents, setStudents] = useState<StudentModel[]>([{}]);
+  const [getStudentName, setStudentName] = useState("");
+  const [getPostResult, setPostResult] = useState<string | null>(null);
 
   const fetchStudentsAsync = () => async () => {
     const allStudents = StudentService.getAll();
@@ -21,6 +23,9 @@ export const StudentComponent: React.FC = () => {
   const clearOutput = () => {
     setResult(null);
   };
+  const randomNr = () => {
+    return Math.floor((Math.random() * 100) + 1);
+  }
 
   //Cool: refetch: the function to manually refetch the query on-demand. @see #getAllData which we call on btnClick!!
   //https://tanstack.com/query/latest/docs/react/reference/useQuery?from=reactQueryV3&original=https%3A%2F%2Ftanstack.com%2Fquery%2Fv3%2Fdocs%2Freference%2FuseQuery
@@ -55,6 +60,25 @@ export const StudentComponent: React.FC = () => {
     }
   );
 
+  const { mutate: postStudent } = useMutation<any, Error>(
+    async () => {
+      const rnd = randomNr();
+      return await StudentService.createStudent(
+        {
+          esid: rnd,
+          name: getStudentName.concat(String(rnd))
+        });
+    },
+    {
+      onSuccess: (res) => {
+        console.log(formatResponse(res));
+        setPostResult(formatResponse(res));
+      },
+      onError: (err: any) => {
+        console.log(formatResponse(err));
+      },
+    }
+  );
   //==========================================================
   //Calls from the rendering
   //==========================================================
@@ -78,6 +102,14 @@ export const StudentComponent: React.FC = () => {
     }
   }
 
+  function postData() {
+    try {
+      postStudent();
+    } catch (err) {
+      //setPostResult(fortmatResponse(err));
+    }
+  }
+
   const formatResponse = (res: any) => {
     return JSON.stringify(res, null, 2);
   };
@@ -90,6 +122,7 @@ export const StudentComponent: React.FC = () => {
       <div className="card">
         <div className="card-header">Student Management</div>
         <div className="card-body">
+
           <div className="input-group input-group-sm">
             <button className="btn btn-sm btn-primary" onClick={getAllData}>
               Get All Students
@@ -98,6 +131,7 @@ export const StudentComponent: React.FC = () => {
             {/*<h3>All: <>{JSON.stringify(getStudents)}</></h3>*/}
             <input
               type="text"
+              maxLength={4}
               value={getId}
               onChange={(e) => setId(+e.target.value)}
               className="form-control ml-2"
@@ -120,6 +154,26 @@ export const StudentComponent: React.FC = () => {
               <pre>{getResult}</pre>
             </div>
           )}
+          <div className="card-body">
+            <div className="form-group">
+              <input
+                type="text"
+                value={getStudentName}
+                onChange={(e) => setStudentName(e.target.value)}
+                className="form-control"
+                placeholder="StudentName"
+              />
+            </div>
+            <button className="btn btn-sm btn-primary" onClick={postData}>
+              Post Data
+            </button>
+
+            {getPostResult && (
+              <div className="alert alert-secondary mt-2" role="alert">
+                <pre>{getPostResult}</pre>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
