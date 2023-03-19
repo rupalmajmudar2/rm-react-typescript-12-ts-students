@@ -10,19 +10,18 @@ const apiClient = axios.create({
   },
 });
 
+const studentData: StudentModel[] = [];
 let s1: StudentModel = { esid: 1, name: "S1" };
 let s2: StudentModel = { esid: 2, name: "S2" };
 let s3: StudentModel = { esid: 3, name: "S3" };
+studentData.push(s1);
+studentData.push(s2);
+studentData.push(s3);
 let sNull: StudentModel = { esid: -1, name: "Anon" };
 
 //function getAll(): StudentModel[] {
 const getAll = () => {
-  let students: StudentModel[] = [];
-  students.push(s1);
-  students.push(s2);
-  students.push(s3);
-
-  return students;
+  return studentData;
 };
 
 const findStudentById = (esid: number) => {
@@ -36,12 +35,14 @@ const findStudentById = (esid: number) => {
 
 const createStudent = async ({ esid, name }: StudentModel) => {
   //const response = await apiClient.post<any>("/tutorials", { title, description });
-  return { esid: esid, name: name };
+  const newStudent = { esid: esid, name: name };
+  studentData.push(newStudent);
+  return newStudent;
 };
 
-const updateStudent = async (id: any, { name }: StudentModel) => {
+const updateStudent = async (id: number, newname: string) => {
   const studentToUpdate = findStudentById(id);
-  studentToUpdate.name = name;
+  studentToUpdate.name = newname;
   return studentToUpdate;
 };
 
@@ -53,54 +54,3 @@ const StudentService = {
 };
 
 export default StudentService;
-/*const findById = async (id: any) => {
-  const response = await apiClient.get<StudentModel>(`/tutorials/${id}`);
-  return response.data;
-};
-
-const findByTitle = async (title: string) => {
-  const response = await apiClient.get<StudentModel[]>(
-    `/tutorials?title=${title}`
-  );
-  return response.data;
-};
-
-const create = async ({ title, description }: StudentModel) => {
-  const response = await apiClient.post<any>("/tutorials", {
-    title,
-    description,
-  });
-  return response.data;
-};
-
-const update = async (
-  id: any,
-  { title, description, published }: StudentModel
-) => {
-  const response = await apiClient.put<any>(`/tutorials/${id}`, {
-    title,
-    description,
-    published,
-  });
-  return response.data;
-};
-
-const deleteById = async (id: any) => {
-  const response = await apiClient.delete<any>(`/tutorials/${id}`);
-  return response.data;
-};
-
-const deleteAll = async () => {
-  const response = await apiClient.delete<any>("/tutorials");
-  return response.data;
-};
-
-const TutorialService = {
-  findAll,
-  findById,
-  findByTitle,
-  create,
-  update,
-  deleteById,
-  deleteAll,
-};*/

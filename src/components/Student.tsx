@@ -79,6 +79,23 @@ export const StudentComponent: React.FC = () => {
       },
     }
   );
+
+  const { mutate: updateStudent } = useMutation<any, Error>(
+    async () => {
+      return await StudentService.updateStudent(
+        getId,
+        getStudentName
+      );
+    },
+    {
+      onSuccess: (res) => {
+        console.log(formatResponse(res));
+      },
+      onError: (err: any) => {
+        console.log(formatResponse(err));
+      },
+    }
+  );
   //==========================================================
   //Calls from the rendering
   //==========================================================
@@ -107,6 +124,16 @@ export const StudentComponent: React.FC = () => {
       postStudent();
     } catch (err) {
       //setPostResult(fortmatResponse(err));
+    }
+  }
+
+  function putData() {
+    if (getId) {
+      try {
+        updateStudent();
+      } catch (err) {
+        //setPutResult(fortmatResponse(err));
+      }
     }
   }
 
@@ -165,7 +192,7 @@ export const StudentComponent: React.FC = () => {
               />
             </div>
             <button className="btn btn-sm btn-primary" onClick={postData}>
-              Post Data
+              Add Student
             </button>
 
             {getPostResult && (
@@ -174,8 +201,33 @@ export const StudentComponent: React.FC = () => {
               </div>
             )}
           </div>
+          <div className="form-group">
+            <input
+              type="text"
+              value={getId}
+              onChange={(e) => setId(+e.target.value)}
+              className="form-control"
+              placeholder="Id"
+            />
+          </div>
+          <div className="form-group">
+            <input
+              type="text"
+              value={getStudentName}
+              onChange={(e) => setStudentName(e.target.value)}
+              className="form-control"
+              placeholder="StudentName"
+            />
+          </div>
+          {/*<label className="form-check-label" htmlFor="putPublished">
+            Publish
+            </label>*/}
+          <button className="btn btn-sm btn-primary" onClick={putData}>
+            Update Name
+          </button>
+
         </div>
       </div>
-    </div>
+    </div >
   );
 }
