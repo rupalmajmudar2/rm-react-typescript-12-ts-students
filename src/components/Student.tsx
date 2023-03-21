@@ -35,7 +35,7 @@ export const StudentComponent: React.FC = () => {
       fetchStudentsAsync(),
       {
         onSuccess: (res) => {
-          console.log("Success! " + formatResponse(res));
+          console.log("Success! ");// + formatResponse(res));
           setResult(formatResponse(res));
           //setStudents(res);
         },
