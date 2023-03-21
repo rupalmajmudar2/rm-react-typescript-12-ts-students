@@ -8,10 +8,14 @@ const root = ReactDOM.createRoot(
 );
 
 const queryClient = new QueryClient();
+console.log("Starting index.tsx render");
 root.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
+      <div>StartRender</div>
       <StudentComponent />
+      <div>StopRender</div>
     </QueryClientProvider>
   </React.StrictMode>
 );
+console.log("Done index.tsx render");

@@ -12,11 +12,10 @@ const apiClient = axios.create({
 
 const studentData: StudentModel[] = [];
 let s1: StudentModel = { esid: 1, name: "S1" };
-let s2: StudentModel = { esid: 2, name: "S2" };
-let s3: StudentModel = { esid: 3, name: "S3" };
 studentData.push(s1);
-studentData.push(s2);
-studentData.push(s3);
+studentData.push({ esid: 2, name: "S2" });
+studentData.push({ esid: 3, name: "S3" });
+studentData.push({ esid: 4, name: "S4" });
 let sNull: StudentModel = { esid: -1, name: "Anon" };
 
 //function getAll(): StudentModel[] {
